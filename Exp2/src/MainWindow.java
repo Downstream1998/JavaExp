@@ -84,6 +84,7 @@ public class MainWindow extends JPanel {
         frame.setContentPane(mainWindow);
 
         frame.setSize(640, 480);
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
@@ -97,8 +98,7 @@ public class MainWindow extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             if(e.getSource() == jbtAdd) {
-                // TODO: 添加商品
-                System.out.println("TODO：添加商品");
+                new AddItem(shoppingListContent);
             } else if(e.getSource() == jbtDelete) {
                 // TODO: 删除商品
                 System.out.println("TODO：删除商品");
