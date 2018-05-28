@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MainWindow extends JPanel {
+public class MainWindow extends JFrame {
     private JTable shoppingList;
     private DefaultTableModel shoppingListContent;
     private JTextArea jtaInfo;
@@ -17,6 +17,9 @@ public class MainWindow extends JPanel {
     private JButton jbtClear;
     private JButton jbtPay;
     private ButtonHandler handler;
+
+    // 对话框
+    private AddItem addItem;
 
     private MainWindow() {
         initializeAll();
@@ -37,6 +40,9 @@ public class MainWindow extends JPanel {
         jbtClear = new JButton("清空消息窗");
         jbtPay = new JButton("结算");
         handler = new ButtonHandler();
+
+        addItem = new AddItem(this, "添加商品");
+        addItem.setModal(true);
     }
 
     private void placeComponents() {
@@ -69,36 +75,24 @@ public class MainWindow extends JPanel {
         jbtPay.addActionListener(handler);
     }
 
-    /**
-     * Create the GUI and show it. For thread safety,
-     * this method should be invoked from the
-     * event-dispatching thread.
-     */
-    private static void createAndShowGUI() {
-        JFrame frame = new JFrame("超市购物结算模拟");
+    public static void main(String[] args) {
+        MainWindow frame = new MainWindow();
+        frame.setSize(640, 480);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
-
-        MainWindow mainWindow = new MainWindow();
-        mainWindow.setOpaque(true);
-        frame.setContentPane(mainWindow);
-
-        frame.setSize(640, 480);
-        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        // Schedule a job for the event-dispatching thread:
-        // Creating and showing this application's GUI
-        javax.swing.SwingUtilities.invokeLater(MainWindow::createAndShowGUI);
     }
 
     private class ButtonHandler implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             if(e.getSource() == jbtAdd) {
-                new AddItem(shoppingListContent);
+                addItem.setVisible(true);
+                shoppingListContent.addRow(addItem.getRowData());
+                System.out.println("输入的商品信息为：");
+                for(Object x : addItem.getRowData())
+                    System.out.print(x + "\t");
+                System.out.println();
             } else if(e.getSource() == jbtDelete) {
                 // TODO: 删除商品
                 System.out.println("TODO：删除商品");

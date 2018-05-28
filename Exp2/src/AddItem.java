@@ -1,29 +1,25 @@
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AddItem extends JFrame implements ActionListener {
-    private DefaultTableModel content;
+public class AddItem extends JDialog implements ActionListener {
     private JTextField jtfName;
     private JTextField jtfPrice;
     private JTextField jtfQuantity;
     private JButton jbtCommit;
-    private JButton jbtClose;
 
-    public AddItem(DefaultTableModel content) {
-        this.content = content;
+    Object[] rowData;
+
+    public AddItem(Frame owner, String title) {
+        super(owner, title);
         initializeAll();
         placeComponents();
         registerHandles();
 
-        setTitle("添加商品");
+        pack();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        pack();
-        setVisible(true);
-        requestFocus();
     }
 
     private void initializeAll() {
@@ -31,7 +27,6 @@ public class AddItem extends JFrame implements ActionListener {
         jtfPrice = new JTextField(15);
         jtfQuantity = new JTextField(15);
         jbtCommit = new JButton("确认");
-        jbtClose = new JButton("关闭");
     }
 
     private void placeComponents() {
@@ -58,8 +53,6 @@ public class AddItem extends JFrame implements ActionListener {
 
         Box buttonArea = Box.createHorizontalBox();
         buttonArea.add(jbtCommit);
-        buttonArea.add(Box.createHorizontalStrut(10));
-        buttonArea.add(jbtClose);
 
         Box panel = Box.createVerticalBox();
         panel.add(inputArea);
@@ -71,8 +64,11 @@ public class AddItem extends JFrame implements ActionListener {
     }
 
     private void registerHandles() {
-        jbtClose.addActionListener(this);
         jbtCommit.addActionListener(this);
+    }
+
+    public Object[] getRowData() {
+        return rowData;
     }
 
     @Override
@@ -85,15 +81,18 @@ public class AddItem extends JFrame implements ActionListener {
 
                 double totalPrice = price * quantity;
                 Object[] row = {name, price, quantity, totalPrice};
-                content.addRow(row);
+                rowData = row;
+
+                jtfName.setText("");
+                jtfPrice.setText("");
+                jtfQuantity.setText("");
+
+                setVisible(false);
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "信息输入有误，请重新输入！");
                 jtfQuantity.setText("");
                 jtfPrice.setText("");
             }
-        } else if(e.getSource() == jbtClose) {
-            setVisible(false);
-            dispose();
         }
     }
 }
