@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Vector;
 import java.util.stream.IntStream;
 
 public class MainWindow extends JFrame {
@@ -22,6 +23,7 @@ public class MainWindow extends JFrame {
 
     // 对话框
     private AddItem addItem;
+    private DeleteItem deleteItem;
 
     private MainWindow() {
         initializeAll();
@@ -45,6 +47,8 @@ public class MainWindow extends JFrame {
 
         addItem = new AddItem(this, "添加商品");
         addItem.setModal(true);
+        deleteItem = new DeleteItem(this, "删除商品", shoppingListContent);
+        deleteItem.setModal(true);
     }
 
     private void placeComponents() {
@@ -52,7 +56,7 @@ public class MainWindow extends JFrame {
 
         jtaInfo.setBorder(new TitledBorder("消息区："));
         jtaInfo.setEditable(false);
-        add(jtaInfo, BorderLayout.CENTER);
+        add(new JScrollPane(jtaInfo), BorderLayout.CENTER);
 
         JPanel buttonArea = new JPanel(new GridLayout(2, 4, 10, 5));
 
@@ -79,6 +83,7 @@ public class MainWindow extends JFrame {
 
     public static void main(String[] args) {
         MainWindow frame = new MainWindow();
+        frame.setTitle("超市购物结算模拟");
         frame.setSize(640, 480);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
@@ -106,8 +111,17 @@ public class MainWindow extends JFrame {
                     jtaInfo.append("\n");
                 }
             } else if(e.getSource() == jbtDelete) {
-                // TODO: 删除商品
-                System.out.println("TODO：删除商品");
+                deleteItem.setVisible(true);
+                int deletedIndex = deleteItem.getDeletedRowIndex();
+                if(deletedIndex != -1 && deleteItem.isCanBeDeleted()) {
+                    Vector deletedData = shoppingListContent.getDataVector().elementAt(deletedIndex);
+                    shoppingListContent.removeRow(deletedIndex);
+
+                    jtaInfo.append("\n移除的商品信息为（品名/单价/数量/总价）：\n");
+                    for(Object obj : deletedData)
+                        jtaInfo.append(obj + "\t");
+                    jtaInfo.append("\n");
+                }
             } else if(e.getSource() == jbtQuery) {
                 // TODO: 查询商品
                 System.out.println("TODO：查询商品");
