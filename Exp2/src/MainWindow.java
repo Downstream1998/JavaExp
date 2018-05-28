@@ -4,6 +4,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 public class MainWindow extends JFrame {
     private JTable shoppingList;
@@ -39,7 +41,7 @@ public class MainWindow extends JFrame {
         jbtPrint = new JButton("打印清单");
         jbtClear = new JButton("清空消息窗");
         jbtPay = new JButton("结算");
-        handler = new ButtonHandler();
+        handler = new ButtonHandler(this);
 
         addItem = new AddItem(this, "添加商品");
         addItem.setModal(true);
@@ -84,15 +86,25 @@ public class MainWindow extends JFrame {
     }
 
     private class ButtonHandler implements ActionListener {
+        private JFrame parent;
+
+        public ButtonHandler(JFrame parent) {
+            this.parent = parent;
+        }
+
         @Override
         public void actionPerformed(ActionEvent e) {
             if(e.getSource() == jbtAdd) {
                 addItem.setVisible(true);
-                shoppingListContent.addRow(addItem.getRowData());
-                System.out.println("输入的商品信息为：");
-                for(Object x : addItem.getRowData())
-                    System.out.print(x + "\t");
-                System.out.println();
+
+                Object[] rowData = addItem.getRowData();
+                if(rowData != null) {
+                    shoppingListContent.addRow(rowData);
+                    jtaInfo.append("\n输入的商品信息为（品名/单价/数量/总价）：\n");
+                    for(Object obj : rowData)
+                        jtaInfo.append(obj + "\t");
+                    jtaInfo.append("\n");
+                }
             } else if(e.getSource() == jbtDelete) {
                 // TODO: 删除商品
                 System.out.println("TODO：删除商品");

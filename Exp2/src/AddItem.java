@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class AddItem extends JDialog implements ActionListener {
     private JTextField jtfName;
@@ -9,7 +11,7 @@ public class AddItem extends JDialog implements ActionListener {
     private JTextField jtfQuantity;
     private JButton jbtCommit;
 
-    Object[] rowData;
+    private Object[] rowData;
 
     public AddItem(Frame owner, String title) {
         super(owner, title);
@@ -65,6 +67,13 @@ public class AddItem extends JDialog implements ActionListener {
 
     private void registerHandles() {
         jbtCommit.addActionListener(this);
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                rowData = null;
+            }
+        });
     }
 
     public Object[] getRowData() {
@@ -80,8 +89,7 @@ public class AddItem extends JDialog implements ActionListener {
                 int quantity = Integer.parseInt(jtfQuantity.getText());
 
                 double totalPrice = price * quantity;
-                Object[] row = {name, price, quantity, totalPrice};
-                rowData = row;
+                rowData = new Object[]{name, price, quantity, totalPrice};
 
                 jtfName.setText("");
                 jtfPrice.setText("");
