@@ -25,6 +25,7 @@ public class MainWindow extends JFrame {
     private AddItem addItem;
     private DeleteItem deleteItem;
     private ShoppingListPrinter listPrinter;
+    private BalancingPage balancingPage;
 
     private MainWindow() {
         initializeAll();
@@ -52,6 +53,8 @@ public class MainWindow extends JFrame {
         deleteItem.setModal(true);
         listPrinter = new ShoppingListPrinter(this, "显示商品列表", shoppingListContent);
         listPrinter.setModal(true);
+        balancingPage = new BalancingPage(this, "结算", shoppingListContent);
+        balancingPage.setModal(true);
     }
 
     private void placeComponents() {
@@ -152,8 +155,7 @@ public class MainWindow extends JFrame {
             } else if(e.getSource() == jbtClear) {
                 jtaInfo.setText("");
             } else if(e.getSource() == jbtPay) {
-                // TODO: 结算
-                System.out.println("TODO：结算");
+                balancingPage.setVisible(true);
             } else if(e.getSource() == jbtPrint) {
                 listPrinter.setVisible(true);
             }
