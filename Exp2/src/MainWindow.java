@@ -24,6 +24,7 @@ public class MainWindow extends JFrame {
     // 对话框
     private AddItem addItem;
     private DeleteItem deleteItem;
+    private ShoppingListPrinter listPrinter;
 
     private MainWindow() {
         initializeAll();
@@ -49,6 +50,8 @@ public class MainWindow extends JFrame {
         addItem.setModal(true);
         deleteItem = new DeleteItem(this, "删除商品", shoppingListContent);
         deleteItem.setModal(true);
+        listPrinter = new ShoppingListPrinter(this, "显示商品列表", shoppingListContent);
+        listPrinter.setModal(true);
     }
 
     private void placeComponents() {
@@ -123,19 +126,36 @@ public class MainWindow extends JFrame {
                     jtaInfo.append("\n");
                 }
             } else if(e.getSource() == jbtQuery) {
-                // TODO: 查询商品
-                System.out.println("TODO：查询商品");
+                Vector<Vector> data = shoppingListContent.getDataVector();
+                try {
+                    String input = JOptionPane.showInputDialog(parent, "输入记录号：");
+                    int key = Integer.parseInt(input);
+                    Vector row = data.elementAt(key - 1);
+
+                    jtaInfo.append("\n记录号为 " + key + " 的商品信息如下（品名/单价/数量/总价）：\n");
+                    for(Object obj : row)
+                        jtaInfo.append(obj + "\t");
+                    jtaInfo.append("\n");
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(parent, "输入错误，请重新输入",
+                            "数据输入错误", JOptionPane.ERROR_MESSAGE);
+                } catch (IndexOutOfBoundsException ex) {
+                    String message = String.format("当前记录号超出范围 (1 ~ %d)，请检查后重新输入", data.size());
+                    JOptionPane.showMessageDialog(parent, message,
+                            "行号超出范围", JOptionPane.ERROR_MESSAGE);
+                }
             } else if(e.getSource() == jbtDeleteAll) {
-                // TODO: 清空列表
-                System.out.println("TODO：清空列表");
+                Object[] tableHead = {"品名", "单价", "数量", "总价"};
+                shoppingListContent = new DefaultTableModel(tableHead, 0);
+
+                jtaInfo.append("\n已清空购物车");
             } else if(e.getSource() == jbtClear) {
                 jtaInfo.setText("");
             } else if(e.getSource() == jbtPay) {
                 // TODO: 结算
                 System.out.println("TODO：结算");
             } else if(e.getSource() == jbtPrint) {
-                // TODO: 打印清单
-                System.out.println("TODO；打印清单");
+                listPrinter.setVisible(true);
             }
         }
     }
