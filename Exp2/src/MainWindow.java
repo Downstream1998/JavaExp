@@ -117,35 +117,45 @@ public class MainWindow extends JFrame {
                     jtaInfo.append("\n");
                 }
             } else if(e.getSource() == jbtDelete) {
-                deleteItem.setVisible(true);
-                int deletedIndex = deleteItem.getDeletedRowIndex();
-                if(deletedIndex != -1 && deleteItem.isCanBeDeleted()) {
-                    Vector deletedData = shoppingListContent.getDataVector().elementAt(deletedIndex);
-                    shoppingListContent.removeRow(deletedIndex);
+                if(shoppingListContent.getRowCount() != 0) {
+                    deleteItem.setVisible(true);
+                    int deletedIndex = deleteItem.getDeletedRowIndex();
+                    if(deletedIndex != -1 && deleteItem.isCanBeDeleted()) {
+                        Vector deletedData = shoppingListContent.getDataVector().elementAt(deletedIndex);
+                        shoppingListContent.removeRow(deletedIndex);
 
-                    jtaInfo.append("\n移除的商品信息为（品名/单价/数量/总价）：\n");
-                    for(Object obj : deletedData)
-                        jtaInfo.append(obj + "\t");
-                    jtaInfo.append("\n");
+                        jtaInfo.append("\n移除的商品信息为（品名/单价/数量/总价）：\n");
+                        for(Object obj : deletedData)
+                            jtaInfo.append(obj + "\t");
+                        jtaInfo.append("\n");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(parent, "当前购物车为空，你不能执行该操作！",
+                            "删除物品时出现问题", JOptionPane.ERROR_MESSAGE);
                 }
             } else if(e.getSource() == jbtQuery) {
-                Vector<Vector> data = shoppingListContent.getDataVector();
-                try {
-                    String input = JOptionPane.showInputDialog(parent, "输入记录号：");
-                    int key = Integer.parseInt(input);
-                    Vector row = data.elementAt(key - 1);
+                if(shoppingListContent.getRowCount() != 0) {
+                    Vector<Vector> data = shoppingListContent.getDataVector();
+                    try {
+                        String input = JOptionPane.showInputDialog(parent, "输入记录号：");
+                        int key = Integer.parseInt(input);
+                        Vector row = data.elementAt(key - 1);
 
-                    jtaInfo.append("\n记录号为 " + key + " 的商品信息如下（品名/单价/数量/总价）：\n");
-                    for(Object obj : row)
-                        jtaInfo.append(obj + "\t");
-                    jtaInfo.append("\n");
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(parent, "输入错误，请重新输入",
-                            "数据输入错误", JOptionPane.ERROR_MESSAGE);
-                } catch (IndexOutOfBoundsException ex) {
-                    String message = String.format("当前记录号超出范围 (1 ~ %d)，请检查后重新输入", data.size());
-                    JOptionPane.showMessageDialog(parent, message,
-                            "行号超出范围", JOptionPane.ERROR_MESSAGE);
+                        jtaInfo.append("\n记录号为 " + key + " 的商品信息如下（品名/单价/数量/总价）：\n");
+                        for(Object obj : row)
+                            jtaInfo.append(obj + "\t");
+                        jtaInfo.append("\n");
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(parent, "输入错误，请重新输入",
+                                "数据输入错误", JOptionPane.ERROR_MESSAGE);
+                    } catch (IndexOutOfBoundsException ex) {
+                        String message = String.format("当前记录号超出范围 (1 ~ %d)，请检查后重新输入", data.size());
+                        JOptionPane.showMessageDialog(parent, message,
+                                "行号超出范围", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(parent, "购物车空空如也，去买些东西吧", null,
+                            JOptionPane.INFORMATION_MESSAGE);
                 }
             } else if(e.getSource() == jbtDeleteAll) {
                 Object[] tableHead = {"品名", "单价", "数量", "总价"};
