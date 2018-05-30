@@ -9,7 +9,6 @@ import java.util.Vector;
 import java.util.stream.IntStream;
 
 public class MainWindow extends JFrame {
-    private JTable shoppingList;
     private DefaultTableModel shoppingListContent;
     private JTextArea jtaInfo;
     private JButton jbtAdd;
@@ -37,7 +36,6 @@ public class MainWindow extends JFrame {
     private void initializeAll() {
         Object[] tableHead = {"品名", "单价", "数量", "总价"};
         shoppingListContent = new DefaultTableModel(tableHead, 0);
-        shoppingList = new JTable(shoppingListContent);
         jtaInfo = new JTextArea();
         jbtAdd = new JButton("添加");
         jbtDelete = new JButton("删除");
@@ -156,7 +154,9 @@ public class MainWindow extends JFrame {
                 }
             } else if(e.getSource() == jbtDeleteAll) {
                 Object[] tableHead = {"品名", "单价", "数量", "总价"};
-                shoppingListContent = new DefaultTableModel(tableHead, 0);
+
+                while (shoppingListContent.getRowCount() != 0)
+                    shoppingListContent.removeRow(0);
 
                 jtaInfo.append("\n已清空购物车");
             } else if(e.getSource() == jbtClear) {
