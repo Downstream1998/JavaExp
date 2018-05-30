@@ -26,6 +26,7 @@ public class MainWindow extends JFrame {
     private DeleteItem deleteItem;
     private ShoppingListPrinter listPrinter;
     private BalancingPage balancingPage;
+    private QueryPage queryPage;
 
     private MainWindow() {
         initializeAll();
@@ -41,7 +42,7 @@ public class MainWindow extends JFrame {
         jbtAdd = new JButton("添加");
         jbtDelete = new JButton("删除");
         jbtQuery = new JButton("查询");
-        jbtDeleteAll = new JButton("清空列表");
+        jbtDeleteAll = new JButton("清空购物车");
         jbtPrint = new JButton("打印清单");
         jbtClear = new JButton("清空消息窗");
         jbtPay = new JButton("结算");
@@ -55,6 +56,8 @@ public class MainWindow extends JFrame {
         listPrinter.setModal(true);
         balancingPage = new BalancingPage(this, "结算", shoppingListContent);
         balancingPage.setModal(true);
+        queryPage = new QueryPage(this, "查询已购买的商品", shoppingListContent);
+        queryPage.setModal(true);
     }
 
     private void placeComponents() {
@@ -128,6 +131,8 @@ public class MainWindow extends JFrame {
                         for(Object obj : deletedData)
                             jtaInfo.append(obj + "\t");
                         jtaInfo.append("\n");
+                        deletedIndex = -1;
+                        deleteItem.clearData();
                     }
                 } else {
                     JOptionPane.showMessageDialog(parent, "当前购物车为空，你不能执行该操作！",
@@ -135,23 +140,15 @@ public class MainWindow extends JFrame {
                 }
             } else if(e.getSource() == jbtQuery) {
                 if(shoppingListContent.getRowCount() != 0) {
-                    Vector<Vector> data = shoppingListContent.getDataVector();
-                    try {
-                        String input = JOptionPane.showInputDialog(parent, "输入记录号：");
-                        int key = Integer.parseInt(input);
-                        Vector row = data.elementAt(key - 1);
-
-                        jtaInfo.append("\n记录号为 " + key + " 的商品信息如下（品名/单价/数量/总价）：\n");
-                        for(Object obj : row)
+                    queryPage.setVisible(true);
+                    Vector queriedData = queryPage.getQueriedData();
+                    if(queriedData != null) {
+                        jtaInfo.append("\n刚刚查询的商品信息为（品名/单价/数量/总价）：\n");
+                        for(Object obj : queriedData)
                             jtaInfo.append(obj + "\t");
                         jtaInfo.append("\n");
-                    } catch (NumberFormatException ex) {
-                        JOptionPane.showMessageDialog(parent, "输入错误，请重新输入",
-                                "数据输入错误", JOptionPane.ERROR_MESSAGE);
-                    } catch (IndexOutOfBoundsException ex) {
-                        String message = String.format("当前记录号超出范围 (1 ~ %d)，请检查后重新输入", data.size());
-                        JOptionPane.showMessageDialog(parent, message,
-                                "行号超出范围", JOptionPane.ERROR_MESSAGE);
+                        queriedData = null;
+                        queryPage.clearQueriedData();
                     }
                 } else {
                     JOptionPane.showMessageDialog(parent, "购物车空空如也，去买些东西吧", null,

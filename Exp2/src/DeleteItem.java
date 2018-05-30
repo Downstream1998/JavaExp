@@ -77,14 +77,6 @@ public class DeleteItem extends JDialog implements ActionListener {
         jbtQuery.addActionListener(this);
         jbtOK.addActionListener(this);
         jbtCancel.addActionListener(this);
-
-        this.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                deletedRowData = null;
-                deletedRowIndex = -1;
-            }
-        });
     }
 
     private void displayQueryResult() {
@@ -95,6 +87,11 @@ public class DeleteItem extends JDialog implements ActionListener {
 
     public Vector getDeletedRowData() {
         return deletedRowData;
+    }
+
+    public void clearData() {
+        deletedRowData = null;
+        deletedRowIndex = -1;
     }
 
     public int getDeletedRowIndex() {
