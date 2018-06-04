@@ -1,3 +1,4 @@
+import boards.AdditionBoard;
 import boards.GameBoard;
 
 import javax.swing.*;
@@ -7,10 +8,14 @@ public class MainWindow extends JFrame {
     MainWindow() {
         setLayout(new BorderLayout());
         GameBoard board = new GameBoard();
+        AdditionBoard additionBoard = new AdditionBoard(board.getCannon());
+
+        this.addKeyListener(board);
 
         Thread t = new Thread(board);
         t.start();
         getContentPane().add(board, BorderLayout.CENTER);
+        getContentPane().add(additionBoard, BorderLayout.EAST);
     }
 
     public static void main(String[] args) {

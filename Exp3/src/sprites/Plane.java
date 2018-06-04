@@ -6,7 +6,7 @@ public class Plane extends Sprite {
     public Plane(int x, int y) {
         super(x, y);
         direction = Direction.RIGHT;
-        speed = 5;
+        speed = 3;
     }
 
     public boolean isAlive() {
