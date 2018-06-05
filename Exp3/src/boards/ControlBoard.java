@@ -32,12 +32,11 @@ public class ControlBoard extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == jbtMoveLeft) {
             cannon.moveLeft();
-            cannon.setDirection(Direction.LEFT);
         } else if(e.getSource() == jbtMoveRight) {
             cannon.moveRight();
-            cannon.setDirection(Direction.RIGHT);
         } else if(e.getSource() == jbtShoot) {
-            // TODO: 添加发射动作
+            if(cannon.getBullets().size() < 10)
+                cannon.shoot();
         }
     }
 }
