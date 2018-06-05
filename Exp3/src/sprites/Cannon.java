@@ -1,10 +1,22 @@
 package sprites;
 
+import java.util.Vector;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 public class Cannon extends Sprite {
+    private CopyOnWriteArrayList<Bullet> bullets = new CopyOnWriteArrayList<>();
+
     public Cannon(int x, int y) {
         super(x, y);
         speed = 5;
-        direction = Direction.RIGHT;
+    }
+
+    public void shoot() {
+        Bullet bullet = new Bullet(coordinate.x + 20, coordinate.y - 15);
+        bullets.add(bullet);
+
+        Thread t = new Thread(bullet);
+        t.start();
     }
 
     public void moveLeft() {
@@ -17,6 +29,10 @@ public class Cannon extends Sprite {
             coordinate.x += speed;
     }
 
+    public CopyOnWriteArrayList<Bullet> getBullets() {
+        return bullets;
+    }
+
     @Override
     public void run() {
         // 空方法，无需实现
@@ -24,7 +40,7 @@ public class Cannon extends Sprite {
 
     @Override
     public String toString() {
-        String message = "[sprites.Cannon] { coordinate = " + coordinate + ", direction = " + direction;
+        String message = "[sprites.Cannon] { coordinate = " + coordinate;
         return message;
     }
 }
