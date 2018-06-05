@@ -14,12 +14,14 @@ import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameBoard extends JPanel implements Runnable, KeyListener {
+    static ScoreBoard scoreBoard = new ScoreBoard();
+
     private BufferedImage planeImg;
     private BufferedImage cannonImg;
     private BufferedImage bulletImg;
 
     private Cannon cannon;
-    private final Vector<Plane> planes = new Vector<>();
+    private final CopyOnWriteArrayList<Plane> planes = new CopyOnWriteArrayList<>();
 
     private static final int PLANE_NUM = 5;
     private static int PLANE_LOWER_BOUND = 200; // 飞机生成区域的 Y 坐标的最大值（面板最底部的位置）
@@ -45,19 +47,20 @@ public class GameBoard extends JPanel implements Runnable, KeyListener {
         cannon = new Cannon(CANNON_START_POS_X, CANNON_START_POS_Y);
         addKeyListener(this);
 
-        synchronized (planes) {
-            for(int i = 0; i < PLANE_NUM; i++) {
-                int x = (int) (Math.random() * -100);
-                Plane p = new Plane(x, (int) (Math.random() * PLANE_LOWER_BOUND));
-                Thread t = new Thread(p);
-                t.start();
-                planes.add(p);
-            }
+        for(int i = 0; i < PLANE_NUM; i++) {
+            addNewPlane();
         }
     }
 
     public Cannon getCannon() {
         return cannon;
+    }
+
+    private void addNewPlane() {
+        Plane p = new Plane((int) (Math.random() * -100), (int) (Math.random() * PLANE_LOWER_BOUND));
+        Thread t = new Thread(p);
+        t.start();
+        planes.add(p);
     }
 
     private void drawPlane(Graphics g, int x, int y) {
@@ -129,6 +132,20 @@ public class GameBoard extends JPanel implements Runnable, KeyListener {
         // 空方法，无需实现
     }
 
+    private boolean canHit(Bullet bullet, Plane plane) {
+        Point bulletCoordinate = bullet.getCoordinate();
+        Point planeCoordinate = plane.getCoordinate();
+
+        if((bulletCoordinate.x >= planeCoordinate.x && bulletCoordinate.x <= planeCoordinate.x + 55) &&
+                (bulletCoordinate.y >= planeCoordinate.y && bulletCoordinate.y <= planeCoordinate.y + 55)) {
+            plane.setAlive(false);
+            bullet.setAlive(false);
+            scoreBoard.increaseScore();
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void run() {
         for(;;) {
@@ -138,15 +155,19 @@ public class GameBoard extends JPanel implements Runnable, KeyListener {
                 e.printStackTrace();
             }
 
-            synchronized (planes) {
-                for(int i = 0; i < planes.size(); i++) {
-                    if(!planes.get(i).isAlive()) {
-                        planes.remove(i);
-                        Plane p = new Plane((int) (Math.random() * -100), (int) (Math.random() * PLANE_LOWER_BOUND));
-                        Thread t = new Thread(p);
-                        t.start();
-                        planes.add(p);
+            for(Bullet bullet : cannon.getBullets()) {
+                for(Plane plane : planes) {
+                    if(plane.isAlive() && canHit(bullet, plane)) {
+                        planes.remove(plane);
+                        addNewPlane();
                     }
+                }
+            }
+
+            for(int i = 0; i < planes.size(); i++) {
+                if(!planes.get(i).isAlive()) {
+                    planes.remove(i);
+                    addNewPlane();
                 }
             }
 

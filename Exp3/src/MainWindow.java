@@ -8,9 +8,8 @@ public class MainWindow extends JFrame {
     MainWindow() {
         setLayout(new BorderLayout());
         GameBoard board = new GameBoard();
-        AdditionBoard additionBoard = new AdditionBoard(board.getCannon());
-
         this.addKeyListener(board);
+        AdditionBoard additionBoard = new AdditionBoard(board.getCannon());
 
         Thread t = new Thread(board);
         t.start();

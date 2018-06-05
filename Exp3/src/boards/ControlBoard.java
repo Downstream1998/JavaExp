@@ -1,7 +1,6 @@
 package boards;
 
 import sprites.Cannon;
-import sprites.Direction;
 
 import javax.swing.*;
 import java.awt.*;

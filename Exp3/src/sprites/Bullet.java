@@ -12,6 +12,10 @@ public class Bullet extends Sprite {
         return alive;
     }
 
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
+
     @Override
     public void run() {
         for(;;) {

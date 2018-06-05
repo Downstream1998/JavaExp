@@ -10,6 +10,7 @@ public class AdditionBoard extends JPanel {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createStrokeBorder(new BasicStroke()));
         add(new ControlBoard(cannon), BorderLayout.SOUTH);
+        add(GameBoard.scoreBoard, BorderLayout.CENTER);
     }
 
     @Override

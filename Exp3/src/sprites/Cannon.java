@@ -12,7 +12,7 @@ public class Cannon extends Sprite {
     }
 
     public void shoot() {
-        Bullet bullet = new Bullet(coordinate.x + 20, coordinate.y - 15);
+        Bullet bullet = new Bullet(coordinate.x + 5, coordinate.y - 20);
         bullets.add(bullet);
 
         Thread t = new Thread(bullet);
