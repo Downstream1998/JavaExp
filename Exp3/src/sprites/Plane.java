@@ -3,7 +3,7 @@ package sprites;
 public class Plane extends Sprite {
     private boolean alive = true;
 
-    public Plane(int x, int y) {
+    public Plane(double x, double y) {
         super(x, y);
         speed = 3;
     }

@@ -30,9 +30,9 @@ public class ControlBoard extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == jbtMoveLeft) {
-            cannon.moveLeft();
+            cannon.rotateLeft();
         } else if(e.getSource() == jbtMoveRight) {
-            cannon.moveRight();
+            cannon.rotateRight();
         } else if(e.getSource() == jbtShoot) {
             if(cannon.getBullets().size() < 10)
                 cannon.shoot();

@@ -1,11 +1,16 @@
 package sprites;
 
 public class Bullet extends Sprite {
-    boolean alive = true;
+    private boolean alive = true;
+    private double xAxisSpeed;
+    private double yAxisSpeed;
 
-    public Bullet(int x, int y) {
+    public Bullet(double x, double y, double shootingAngle) {
         super(x, y);
         speed = 5;
+
+        xAxisSpeed = speed * Math.sin(shootingAngle);
+        yAxisSpeed = speed * Math.cos(shootingAngle);
     }
 
     public boolean isAlive() {
@@ -25,9 +30,10 @@ public class Bullet extends Sprite {
                 e.printStackTrace();
             }
 
-            coordinate.y -= speed;
+            coordinate.x += xAxisSpeed;
+            coordinate.y -= yAxisSpeed;
 
-            if(coordinate.y < 0) {
+            if(coordinate.y < 0 || coordinate.x < 0 || coordinate.x > 600) {
                 alive = false;
                 break;
             }

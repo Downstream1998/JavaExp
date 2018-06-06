@@ -7,10 +7,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameBoard extends JPanel implements Runnable, KeyListener {
@@ -26,7 +26,7 @@ public class GameBoard extends JPanel implements Runnable, KeyListener {
     private static final int PLANE_NUM = 5;
     private static int PLANE_LOWER_BOUND = 200; // 飞机生成区域的 Y 坐标的最大值（面板最底部的位置）
 
-    private static final int CANNON_START_POS_X = 10;
+    private static final int CANNON_START_POS_X = 300;
     private static final int CANNON_START_POS_Y = 400;
 
     private static final int BULLET_NUM = 10;   // 同屏子弹的最大数量
@@ -74,7 +74,7 @@ public class GameBoard extends JPanel implements Runnable, KeyListener {
     private void drawBullets(Graphics g, CopyOnWriteArrayList<Bullet> bullets) {
         for(Bullet bullet : bullets) {
             if(bullet.isAlive())
-                g.drawImage(bulletImg, bullet.getCoordinate().x, bullet.getCoordinate().y, this);
+                g.drawImage(bulletImg, (int)bullet.getCoordinate().x, (int)bullet.getCoordinate().y, this);
             else
                 bullets.remove(bullet);
         }
@@ -84,10 +84,10 @@ public class GameBoard extends JPanel implements Runnable, KeyListener {
     public void paint(Graphics g) {
         super.paint(g);
 
-        this.drawCannon(g, cannon.getCoordinate().x, cannon.getCoordinate().y);
+        this.drawCannon(g, (int)cannon.getCoordinate().x, (int)cannon.getCoordinate().y);
 
         for(Plane plane : planes) {
-            this.drawPlane(g, plane.getCoordinate().x, plane.getCoordinate().y);
+            this.drawPlane(g, (int)plane.getCoordinate().x, (int)plane.getCoordinate().y);
         }
 
         this.drawBullets(g, cannon.getBullets());
@@ -100,11 +100,11 @@ public class GameBoard extends JPanel implements Runnable, KeyListener {
         switch(e.getKeyCode()) {
             case KeyEvent.VK_A:
             case KeyEvent.VK_LEFT:
-                cannon.moveLeft();
+                cannon.rotateLeft();
                 break;
             case KeyEvent.VK_D:
             case KeyEvent.VK_RIGHT:
-                cannon.moveRight();
+                cannon.rotateRight();
                 break;
             case KeyEvent.VK_W:
             case KeyEvent.VK_UP:
@@ -112,13 +112,6 @@ public class GameBoard extends JPanel implements Runnable, KeyListener {
                     cannon.shoot();
                 break;
         }
-//        if(e.getKeyCode() == KeyEvent.VK_A) {
-//            cannon.moveLeft();
-//            cannon.setDirection(Direction.LEFT);
-//        } else if(e.getKeyCode() == KeyEvent.VK_D) {
-//            cannon.moveRight();
-//            cannon.setDirection(Direction.RIGHT);
-//        } else if(e.getKeyCode() == KeyEvent.VK_A)
         this.repaint();
     }
 
@@ -133,8 +126,8 @@ public class GameBoard extends JPanel implements Runnable, KeyListener {
     }
 
     private boolean canHit(Bullet bullet, Plane plane) {
-        Point bulletCoordinate = bullet.getCoordinate();
-        Point planeCoordinate = plane.getCoordinate();
+        Point2D.Double bulletCoordinate = bullet.getCoordinate();
+        Point2D.Double planeCoordinate = plane.getCoordinate();
 
         if((bulletCoordinate.x >= planeCoordinate.x && bulletCoordinate.x <= planeCoordinate.x + 55) &&
                 (bulletCoordinate.y >= planeCoordinate.y && bulletCoordinate.y <= planeCoordinate.y + 55)) {

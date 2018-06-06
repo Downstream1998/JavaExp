@@ -13,8 +13,8 @@ public class MainWindow extends JFrame {
 
         Thread t = new Thread(board);
         t.start();
-        getContentPane().add(board, BorderLayout.CENTER);
         getContentPane().add(additionBoard, BorderLayout.EAST);
+        getContentPane().add(board, BorderLayout.CENTER);
     }
 
     public static void main(String[] args) {

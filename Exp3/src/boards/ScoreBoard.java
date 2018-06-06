@@ -10,7 +10,7 @@ public class ScoreBoard extends JPanel {
 
     public ScoreBoard() {
         setLayout(new BorderLayout());
-        jtfScoreBoard.setFont(new Font("sans-serif", Font.PLAIN, 20));
+        jtfScoreBoard.setFont(new Font("Arial", Font.BOLD, 28));
         jtfScoreBoard.setText("0");
         jtfScoreBoard.setEditable(false);
         jlblTitle.setFont(new Font("sans-serif", Font.PLAIN, 16));
