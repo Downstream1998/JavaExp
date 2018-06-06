@@ -41,10 +41,4 @@ public class Cannon extends Sprite {
     public void run() {
         // 空方法，无需实现
     }
-
-    @Override
-    public String toString() {
-        String message = "[sprites.Cannon] { coordinate = " + coordinate;
-        return message;
-    }
 }

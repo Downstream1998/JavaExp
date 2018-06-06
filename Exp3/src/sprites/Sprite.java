@@ -1,6 +1,5 @@
 package sprites;
 
-import java.awt.*;
 import java.awt.geom.Point2D;
 
 public abstract class Sprite implements Runnable {
