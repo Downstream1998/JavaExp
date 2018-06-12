@@ -16,17 +16,17 @@ public class UpdatePage extends JPanel {
     }
 
     private void placeComponents() {
-        setLayout(new BorderLayout());
+        setLayout(new FlowLayout());
 
         Box labels = Box.createVerticalBox();
         labels.add(new JLabel("书名："));
-        labels.add(Box.createVerticalStrut(5));
+        labels.add(Box.createVerticalStrut(8));
         labels.add(new JLabel("作者："));
-        labels.add(Box.createVerticalStrut(5));
+        labels.add(Box.createVerticalStrut(8));
         labels.add(new JLabel("出版社："));
-        labels.add(Box.createVerticalStrut(5));
+        labels.add(Box.createVerticalStrut(8));
         labels.add(new JLabel("书号："));
-        labels.add(Box.createVerticalStrut(5));
+        labels.add(Box.createVerticalStrut(8));
         labels.add(new JLabel("价格："));
 
         Box textFields = Box.createVerticalBox();
@@ -50,7 +50,7 @@ public class UpdatePage extends JPanel {
         updateArea.add(Box.createVerticalStrut(5));
         updateArea.add(jbtUpdate);
 
-        add(updateArea, BorderLayout.CENTER);
+        add(updateArea);
     }
 
     private void registerHandlers() {

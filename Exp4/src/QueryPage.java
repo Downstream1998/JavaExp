@@ -22,11 +22,11 @@ public class QueryPage extends JPanel {
 
         Box labels = Box.createVerticalBox();
         labels.add(new JLabel("书名："));
-        labels.add(Box.createVerticalStrut(5));
+        labels.add(Box.createVerticalStrut(8));
         labels.add(new JLabel("作者："));
-        labels.add(Box.createVerticalStrut(5));
+        labels.add(Box.createVerticalStrut(8));
         labels.add(new JLabel("出版社："));
-        labels.add(Box.createVerticalStrut(5));
+        labels.add(Box.createVerticalStrut(8));
         labels.add(new JLabel("书号："));
 
         Box textFields = Box.createVerticalBox();
@@ -48,10 +48,12 @@ public class QueryPage extends JPanel {
         queryArea.add(Box.createVerticalStrut(5));
         queryArea.add(jbtQuery);
 
+        JPanel jplQuery = new JPanel(new FlowLayout());
+        jplQuery.add(queryArea);
         jtaInfo.setBorder(new TitledBorder("查询结果"));
 
-        add(queryArea, BorderLayout.CENTER);
-        add(jtaInfo, BorderLayout.SOUTH);
+        add(jplQuery, BorderLayout.NORTH);
+        add(jtaInfo, BorderLayout.CENTER);
     }
 
     private void registerHandlers() {

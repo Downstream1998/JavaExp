@@ -12,7 +12,7 @@ public class DeletePage extends JPanel {
     }
 
     private void placeComponents() {
-        setLayout(new BorderLayout());
+        setLayout(new FlowLayout());
 
         Box inputArea = Box.createHorizontalBox();
         inputArea.add(new JLabel("书名："));
