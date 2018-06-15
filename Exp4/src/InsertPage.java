@@ -1,16 +1,22 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
-public class InsertPage extends JPanel {
+public class InsertPage extends JPanel implements ActionListener {
     private JTextField jtfName = new JTextField(15);
     private JTextField jtfAuthor = new JTextField(15);
     private JTextField jtfPublisher = new JTextField(15);
     private JTextField jtfISBN = new JTextField(15);
     private JTextField jtfPrice = new JTextField(15);
 
+    SQLHandler handler;
+
     private JButton jbtInsert = new JButton("插入");
 
-    public InsertPage() {
+    public InsertPage(SQLHandler handler) {
+        this.handler = handler;
         placeComponents();
         registerHandlers();
     }
@@ -54,6 +60,29 @@ public class InsertPage extends JPanel {
     }
 
     private void registerHandlers() {
+        jbtInsert.addActionListener(this);
+    }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String name = jtfName.getText();
+        String author = jtfAuthor.getText();
+        String publisher = jtfPublisher.getText();
+        String ISBN = jtfISBN.getText();
+        try {
+            float price = Float.parseFloat(jtfPrice.getText());
+            handler.insertAnItem(name, author, publisher, ISBN, price);
+            JOptionPane.showMessageDialog(this, "插入成功！");
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "请输入合法的价格值", "", JOptionPane.WARNING_MESSAGE);
+            jtfPrice.setText("");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+        }
+        jtfName.setText("");
+        jtfAuthor.setText("");
+        jtfPublisher.setText("");
+        jtfISBN.setText("");
+        jtfPublisher.setText("");
     }
 }

@@ -1,12 +1,18 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
-public class DeletePage extends JPanel {
+public class DeletePage extends JPanel implements ActionListener {
     private JTextField jtfName = new JTextField(15);
 
     private JButton jbtDelete = new JButton("删除");
 
-    public DeletePage() {
+    private SQLHandler handler;
+
+    public DeletePage(SQLHandler handler) {
+        this.handler = handler;
         placeComponents();
         registerHandlers();
     }
@@ -29,6 +35,18 @@ public class DeletePage extends JPanel {
     }
 
     private void registerHandlers() {
+        jbtDelete.addActionListener(this);
+    }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String name = jtfName.getText();
+        try {
+            handler.deleteAnItem(name);
+            JOptionPane.showMessageDialog(this, "操作已完成");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+        }
+        jtfName.setText("");
     }
 }

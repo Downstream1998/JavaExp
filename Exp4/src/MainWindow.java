@@ -2,8 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainWindow extends JFrame {
-    private InsertPage insertPage = new InsertPage();
-    private DeletePage deletePage = new DeletePage();
+    private SQLHandler handler = new SQLHandler();
+    private InsertPage insertPage = new InsertPage(handler);
+    private DeletePage deletePage = new DeletePage(handler);
     private UpdatePage updatePage = new UpdatePage();
     private QueryPage queryPage = new QueryPage();
 
