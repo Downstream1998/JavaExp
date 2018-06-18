@@ -8,7 +8,7 @@ public class SQLHandler {
     private static final String PASSWORD = "Downstream";
 
     public enum ColumnName {
-        NAME, AUTHOR, PUBLISHER, ISBN, PRICE
+        NAME, AUTHOR, PUBLISHER, ISBN
     }
 
     public SQLHandler() {
@@ -36,8 +36,9 @@ public class SQLHandler {
         ps.executeUpdate();
     }
 
-    public void updateAnItem(String bookName, String author, String publisher, String ISBN, float price) {
-        try {
+    public void updateAnItem(String bookName, String author, String publisher, String ISBN, float price)
+            throws SQLException {
+
             PreparedStatement ps = con.prepareStatement(
                     "UPDATE BOOKS " +
                             "SET AUTHOR = ?, PUBLISHER = ?, ISBN = ?, PRICE = ? " +
@@ -52,12 +53,10 @@ public class SQLHandler {
             ps.setString(5, bookName);
 
             ps.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println("发生异常：" + e.getMessage());
-        }
+
     }
 
-    public ResultSet query(ColumnName column, Object value) {
+    public ResultSet query(ColumnName column, String value) throws SQLException {
         StringBuilder queryString = new StringBuilder("SELECT * FROM BOOKS WHERE ");
         switch (column) {
             case NAME:
@@ -72,21 +71,12 @@ public class SQLHandler {
             case ISBN:
                 queryString.append("ISBN = ?");
                 break;
-            case PRICE:
-                queryString.append("PRICE = ?");
-                break;
         }
 
-        try {
-            PreparedStatement ps = con.prepareStatement(queryString.toString());
-            ps.setObject(1, value);
+        PreparedStatement ps = con.prepareStatement(queryString.toString());
+        ps.setString(1, value);
 
-            return ps.executeQuery();
-        } catch (SQLException e) {
-            System.err.println("发生异常：" + e.getMessage());
-        }
-
-        return null;
+        return ps.executeQuery();
     }
 
     public void deleteAnItem(String bookName) throws SQLException {

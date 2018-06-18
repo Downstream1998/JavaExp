@@ -1,7 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-public class UpdatePage extends JPanel {
+public class UpdatePage extends JPanel implements ActionListener {
     private JTextField jtfName = new JTextField(15);
     private JTextField jtfAuthor = new JTextField(15);
     private JTextField jtfPublisher = new JTextField(15);
@@ -9,8 +13,12 @@ public class UpdatePage extends JPanel {
     private JTextField jtfPrice = new JTextField(15);
 
     private JButton jbtUpdate = new JButton("更新");
+    private JButton jbtCheck = new JButton("确认");
 
-    public UpdatePage() {
+    private SQLHandler handler;
+
+    public UpdatePage(SQLHandler handler) {
+        this.handler = handler;
         placeComponents();
         registerHandlers();
     }
@@ -54,6 +62,41 @@ public class UpdatePage extends JPanel {
     }
 
     private void registerHandlers() {
+        jbtUpdate.addActionListener(this);
+    }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == jbtUpdate)
+            handleUpdate();
+        else if (e.getSource() == jbtCheck)
+            handleCheck();
+    }
+
+    private void handleCheck() {
+
+    }
+
+    private void handleUpdate() {
+        String name = jtfName.getText();
+        String author = jtfAuthor.getText();
+        String publisher = jtfPublisher.getText();
+        String ISBN = jtfISBN.getText();
+        try {
+            float price = Float.parseFloat(jtfPrice.getText());
+            handler.updateAnItem(name, author, publisher, ISBN, price);
+            JOptionPane.showMessageDialog(this, "操作已完成！");
+            jbtUpdate.setEnabled(false);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "请输入合法的价格值", "", JOptionPane.WARNING_MESSAGE);
+            jtfPrice.setText("");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+        }
+        jtfName.setText("");
+        jtfAuthor.setText("");
+        jtfPublisher.setText("");
+        jtfISBN.setText("");
+        jtfPrice.setText("");
     }
 }

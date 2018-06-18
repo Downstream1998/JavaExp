@@ -11,7 +11,7 @@ public class InsertPage extends JPanel implements ActionListener {
     private JTextField jtfISBN = new JTextField(15);
     private JTextField jtfPrice = new JTextField(15);
 
-    SQLHandler handler;
+    private SQLHandler handler;
 
     private JButton jbtInsert = new JButton("插入");
 
@@ -83,6 +83,6 @@ public class InsertPage extends JPanel implements ActionListener {
         jtfAuthor.setText("");
         jtfPublisher.setText("");
         jtfISBN.setText("");
-        jtfPublisher.setText("");
+        jtfPrice.setText("");
     }
 }

@@ -1,8 +1,12 @@
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-public class QueryPage extends JPanel {
+public class QueryPage extends JPanel implements ActionListener {
     private JTextField jtfName = new JTextField(15);
     private JTextField jtfAuthor = new JTextField(15);
     private JTextField jtfPublisher = new JTextField(15);
@@ -12,7 +16,12 @@ public class QueryPage extends JPanel {
 
     private JTextArea jtaInfo = new JTextArea();
 
-    public QueryPage() {
+    private JScrollPane jspInfoView = new JScrollPane(jtaInfo);
+
+    private SQLHandler handler;
+
+    public QueryPage(SQLHandler handler) {
+        this.handler = handler;
         placeComponents();
         registerHandlers();
     }
@@ -50,13 +59,62 @@ public class QueryPage extends JPanel {
 
         JPanel jplQuery = new JPanel(new FlowLayout());
         jplQuery.add(queryArea);
-        jtaInfo.setBorder(new TitledBorder("查询结果"));
+        jtaInfo.setEditable(false);
+        jspInfoView.setBorder(new TitledBorder("查询结果"));
 
         add(jplQuery, BorderLayout.NORTH);
-        add(jtaInfo, BorderLayout.CENTER);
+        add(jspInfoView, BorderLayout.CENTER);
     }
 
     private void registerHandlers() {
+        jbtQuery.addActionListener(this);
+    }
 
+    private void printQueryResult(ResultSet rs) throws SQLException {
+        int count = 1;
+        while (rs.next()) {
+            jtaInfo.append("#" + count + "\n");
+            jtaInfo.append("书名：" + rs.getString("NAME") + "\n");
+            jtaInfo.append("作者：" + rs.getString("AUTHOR") + "\n");
+            jtaInfo.append("出版社：" + rs.getString("PUBLISHER") + "\n");
+            jtaInfo.append("书号：" + rs.getString("ISBN") + "\n");
+            jtaInfo.append("价格：" + rs.getFloat("PRICE") + "\n");
+            jtaInfo.append("\n");
+            count++;
+        }
+        if (count == 1)
+            jtaInfo.append("无结果");
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        jtaInfo.setText("");
+
+        String bookName = jtfName.getText();
+        String author = jtfAuthor.getText();
+        String publisher = jtfPublisher.getText();
+        String ISBN = jtfISBN.getText();
+        ResultSet rs = null;
+
+        try {
+            if (bookName.length() != 0) {
+                rs = handler.query(SQLHandler.ColumnName.NAME, bookName);
+            } else if (author.length() != 0) {
+                rs = handler.query(SQLHandler.ColumnName.AUTHOR, author);
+            } else if (publisher.length() != 0) {
+                rs = handler.query(SQLHandler.ColumnName.PUBLISHER, publisher);
+            } else if (ISBN.length() != 0) {
+                rs = handler.query(SQLHandler.ColumnName.ISBN, ISBN);
+            }
+
+            printQueryResult(rs);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+        }
+
+        jtfName.setText("");
+        jtfAuthor.setText("");
+        jtfPublisher.setText("");
+        jtfISBN.setText("");
     }
 }
