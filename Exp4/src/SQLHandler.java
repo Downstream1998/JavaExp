@@ -41,16 +41,16 @@ public class SQLHandler {
 
             PreparedStatement ps = con.prepareStatement(
                     "UPDATE BOOKS " +
-                            "SET AUTHOR = ?, PUBLISHER = ?, ISBN = ?, PRICE = ? " +
-                            "WHERE NAME = ?"
+                            "SET PUBLISHER = ?, ISBN = ?, PRICE = ? " +
+                            "WHERE NAME = ? AND AUTHOR = ?"
             );
 
-            ps.setString(1, author);
-            ps.setString(2, publisher);
-            ps.setString(3, ISBN);
-            ps.setFloat(4, price);
+        ps.setString(1, publisher);
+        ps.setString(2, ISBN);
+        ps.setFloat(3, price);
 
-            ps.setString(5, bookName);
+        ps.setString(4, bookName);
+        ps.setString(5, author);
 
             ps.executeUpdate();
 
@@ -76,6 +76,13 @@ public class SQLHandler {
         PreparedStatement ps = con.prepareStatement(queryString.toString());
         ps.setString(1, value);
 
+        return ps.executeQuery();
+    }
+
+    public ResultSet queryByPrimaryKey(String bookName, String author) throws SQLException {
+        PreparedStatement ps = con.prepareStatement("SELECT * FROM BOOKS WHERE NAME = ? AND AUTHOR = ?");
+        ps.setString(1, bookName);
+        ps.setString(2, author);
         return ps.executeQuery();
     }
 

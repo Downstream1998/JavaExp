@@ -53,16 +53,23 @@ public class UpdatePage extends JPanel implements ActionListener {
         inputArea.add(Box.createHorizontalStrut(10));
         inputArea.add(textFields);
 
+        jbtUpdate.setEnabled(false);
+        Box buttonsArea = Box.createHorizontalBox();
+        buttonsArea.add(jbtCheck);
+        buttonsArea.add(Box.createHorizontalGlue());
+        buttonsArea.add(jbtUpdate);
+
         Box updateArea = Box.createVerticalBox();
         updateArea.add(inputArea);
         updateArea.add(Box.createVerticalStrut(5));
-        updateArea.add(jbtUpdate);
+        updateArea.add(buttonsArea);
 
         add(updateArea);
     }
 
     private void registerHandlers() {
         jbtUpdate.addActionListener(this);
+        jbtCheck.addActionListener(this);
     }
 
     @Override
@@ -74,7 +81,21 @@ public class UpdatePage extends JPanel implements ActionListener {
     }
 
     private void handleCheck() {
-
+        String bookName = jtfName.getText();
+        String author = jtfAuthor.getText();
+        try {
+            ResultSet rs = handler.queryByPrimaryKey(bookName, author);
+            if (rs.next()) {
+                jtfPublisher.setText(rs.getString("PUBLISHER"));
+                jtfISBN.setText(rs.getString("ISBN"));
+                jtfPrice.setText("" + rs.getFloat("PRICE"));
+                jbtUpdate.setEnabled(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "未查到相应记录", "", JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void handleUpdate() {
